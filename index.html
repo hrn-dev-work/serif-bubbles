@@ -153,6 +153,24 @@ header h1 {
   color: var(--muted);
   font-size: 0.88rem;
 }
+.name-field {
+  display: grid;
+  gap: 4px;
+  margin: 0 0 6px;
+}
+.name-field span {
+  color: var(--muted);
+  font-size: 0.82rem;
+}
+.name-field input {
+  width: 100%;
+  min-height: 44px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #fff;
+  padding: 8px 12px;
+  font-size: 16px;
+}
 .icon-actions {
   display: flex;
   flex-wrap: wrap;
@@ -412,9 +430,9 @@ footer {
   <header>
     <h1>吹き出し画像メーカー</h1>
     <div class="howto">
-      <p>アイコンを設定し、セリフを1行ずつ追加するか、「わたし：」「メェ助：」の行をまとめて貼ります。</p>
-      <p>プレビューで吹き出しを確認し、背景は透明か薄い緑を選びます。</p>
-      <p>セリフごと、または会話全体を、横幅800pxのPNGで保存します。</p>
+      <p>右側の名前は「わたし」、左側は「メェ助」が初期値です。どちらも別の名前に変えられます。</p>
+      <p>セリフを1行ずつ追加するか、「名前：」で始まる行をまとめて貼ります。</p>
+      <p>プレビューを確認し、セリフごと、または会話全体を、横幅800pxのPNGで保存します。</p>
     </div>
   </header>
 
@@ -422,7 +440,7 @@ footer {
     <div class="editor-col">
       <section class="panel" aria-labelledby="icon-heading">
         <h2 id="icon-heading">アイコン</h2>
-        <p class="hint">丸く切り抜き、金色の細い縁を付けます。このブラウザに保存するので、次に開いたときも使えます。</p>
+        <p class="hint">名前は吹き出しと、まとめて貼る行頭に使います。空にすると初期値に戻ります。アイコンは丸く切り抜き、金色の細い縁を付けて、このブラウザに残します。</p>
         <div class="icons">
           <article class="icon-card" data-speaker="watashi">
             <div class="icon-face">
@@ -430,7 +448,10 @@ footer {
               <span class="icon-fallback" data-icon-fallback="watashi">わ</span>
             </div>
             <div class="icon-copy">
-              <h3>わたし</h3>
+              <label class="name-field">
+                <span>右側の名前</span>
+                <input id="name-watashi" data-name="watashi" type="text" value="わたし" autocomplete="off" enterkeyhint="done" aria-label="右側の名前">
+              </label>
               <p>右寄せ。白地に緑の枠。</p>
               <div class="icon-actions">
                 <label class="file-btn">画像を選ぶ
@@ -446,7 +467,10 @@ footer {
               <span class="icon-fallback" data-icon-fallback="meesuke">メ</span>
             </div>
             <div class="icon-copy">
-              <h3>メェ助</h3>
+              <label class="name-field">
+                <span>左側の名前</span>
+                <input id="name-meesuke" data-name="meesuke" type="text" value="メェ助" autocomplete="off" enterkeyhint="done" aria-label="左側の名前">
+              </label>
               <p>左寄せ。クリーム地に金の枠。</p>
               <div class="icon-actions">
                 <label class="file-btn">画像を選ぶ
@@ -475,8 +499,8 @@ footer {
 
       <section class="panel" aria-labelledby="bulk-heading">
         <h2 id="bulk-heading">まとめて貼る</h2>
-        <textarea id="bulk" rows="6" placeholder="わたし：本命は内枠。直線の切れ味で差し切れるはず。&#10;メェ助：今日の馬場は稍重。先行勢が残りやすい。" aria-label="まとめて貼るセリフ"></textarea>
-        <p class="hint">行頭が「わたし：」または「メェ助：」の行だけ取り込みます。80文字を超える分は切り詰めます。</p>
+        <textarea id="bulk" rows="6" placeholder="わたし：今日は、朝の散歩で気づいたことを書きます。&#10;メェ助：どの道を歩いたの？" aria-label="まとめて貼るセリフ"></textarea>
+        <p id="bulk-hint" class="hint">行頭が「わたし：」または「メェ助：」の行だけ取り込みます。80文字を超える分は切り詰めます。</p>
         <div class="bulk-actions">
           <button type="button" class="primary" id="bulk-append">末尾に追加</button>
           <button type="button" id="bulk-replace">この内容に置き換える</button>
@@ -643,29 +667,36 @@ const LAYOUT = {
 };
 const SPEAKERS = {
   meesuke: {
+    defaultName: "メェ助",
     name: "メェ助",
+    committed: "メェ助",
     fill: "#FFFBF0",
     stroke: "#C99A3E",
     nameColor: "#6e4f1c",
     side: "left",
+    defaultInitial: "メ",
     initial: "メ",
   },
   watashi: {
+    defaultName: "わたし",
     name: "わたし",
+    committed: "わたし",
     fill: "#FFFFFF",
     stroke: "#4E7A3F",
     nameColor: "#3e6432",
     side: "right",
+    defaultInitial: "わ",
     initial: "わ",
   },
 };
+const NAME_LIMIT = 12;
 const KEY_ICONS = "serif-bubble-icons-v1";
 const KEY_LINES = "serif-bubble-lines-v1";
 const KEY_PREFS = "serif-bubble-prefs-v1";
 const EXAMPLE = [
-  ["meesuke", "今日の馬場は稍重。先行勢が残りやすい流れだと思う。"],
-  ["watashi", "本命は内枠。直線の切れ味で差し切れるはず。"],
-  ["meesuke", "相手は人気薄の逃げ馬。穴で一つ押さえたい。"],
+  ["watashi", "今日は、朝の散歩で気づいたことを書きます。"],
+  ["meesuke", "どの道を歩いたの？"],
+  ["watashi", "川沿いです。風が少し冷たくて、頭がはっきりしました。"],
 ];
 
 const state = {
@@ -682,6 +713,64 @@ const NAME_FONT = "500 " + LAYOUT.nameSize + "px " + FONT_FAMILY;
 
 function uid() {
   return Math.random().toString(36).slice(2, 10);
+}
+
+function otherSpeaker(key) {
+  return key === "watashi" ? "meesuke" : "watashi";
+}
+
+function clampName(value) {
+  return Array.from(String(value).replace(/[\r\n]/g, "")).slice(0, NAME_LIMIT).join("");
+}
+
+function refreshSpeakerGlyph(key) {
+  const spec = SPEAKERS[key];
+  spec.initial = Array.from(spec.name)[0] || spec.defaultInitial;
+}
+
+function escapeRegExp(value) {
+  return String(value).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+function namePrefixes() {
+  const pairs = [];
+  ["watashi", "meesuke"].forEach((key) => {
+    pairs.push({ key, name: SPEAKERS[key].name });
+    if (SPEAKERS[key].defaultName !== SPEAKERS[key].name) {
+      pairs.push({ key, name: SPEAKERS[key].defaultName });
+    }
+  });
+  const seen = new Set();
+  return pairs.filter((item) => {
+    if (!item.name || seen.has(item.name)) return false;
+    seen.add(item.name);
+    return true;
+  }).sort((a, b) => Array.from(b.name).length - Array.from(a.name).length);
+}
+
+function bulkPlaceholder() {
+  return SPEAKERS.watashi.name + "：今日は、朝の散歩で気づいたことを書きます。\n"
+    + SPEAKERS.meesuke.name + "：どの道を歩いたの？";
+}
+
+function syncNameSurfaces() {
+  ["watashi", "meesuke"].forEach((key) => {
+    const fallback = document.querySelector('[data-icon-fallback="' + key + '"]');
+    if (fallback) fallback.textContent = SPEAKERS[key].initial;
+    const input = document.querySelector('[data-name="' + key + '"]');
+    if (input && document.activeElement !== input) input.value = SPEAKERS[key].name;
+  });
+  document.querySelectorAll("#lines select").forEach((select) => {
+    Array.from(select.options).forEach((option) => {
+      if (SPEAKERS[option.value]) option.textContent = SPEAKERS[option.value].name;
+    });
+  });
+  const bulk = document.getElementById("bulk");
+  if (bulk) bulk.placeholder = bulkPlaceholder();
+  const hint = document.getElementById("bulk-hint");
+  if (hint) {
+    hint.textContent = "行頭が「" + SPEAKERS.watashi.name + "：」または「" + SPEAKERS.meesuke.name + "：」の行だけ取り込みます。80文字を超える分は切り詰めます。";
+  }
 }
 
 function countChars(value) {
@@ -857,10 +946,16 @@ function renderRow(ctx, line, measured, rowY) {
 
   drawIcon(ctx, line.speaker, iconCx, iconCy);
 
-  ctx.font = NAME_FONT;
   ctx.fillStyle = spec.nameColor;
   ctx.textAlign = "center";
   ctx.textBaseline = "top";
+  let nameSize = LAYOUT.nameSize;
+  ctx.font = "500 " + nameSize + "px " + FONT_FAMILY;
+  const nameMax = LAYOUT.colW - 4;
+  while (nameSize > 11 && ctx.measureText(spec.name).width > nameMax) {
+    nameSize -= 1;
+    ctx.font = "500 " + nameSize + "px " + FONT_FAMILY;
+  }
   ctx.fillText(spec.name, iconCx, rowY + LAYOUT.icon + LAYOUT.nameGap);
 
   const bodyX = side === "left" ? bubbleX + LAYOUT.tailW : bubbleX;
@@ -1111,6 +1206,10 @@ function persistPrefs() {
     localStorage.setItem(KEY_PREFS, JSON.stringify({
       mode: state.mode,
       background: state.background,
+      names: {
+        watashi: SPEAKERS.watashi.name,
+        meesuke: SPEAKERS.meesuke.name,
+      },
     }));
   } catch (err) {
     /* 設定の保存に失敗しても、いまの選択は使える */
@@ -1142,6 +1241,17 @@ function loadStored() {
     if (prefs && (prefs.mode === "each" || prefs.mode === "all")) state.mode = prefs.mode;
     if (prefs && (prefs.background === "clear" || prefs.background === "green")) {
       state.background = prefs.background;
+    }
+    if (prefs && prefs.names) {
+      ["watashi", "meesuke"].forEach((key) => {
+        const stored = prefs.names[key];
+        if (typeof stored !== "string") return;
+        const cleaned = clampName(stored).trim();
+        if (!cleaned || cleaned === SPEAKERS[otherSpeaker(key)].name) return;
+        SPEAKERS[key].name = cleaned;
+        SPEAKERS[key].committed = cleaned;
+        refreshSpeakerGlyph(key);
+      });
     }
   } catch (err) {
     /* 壊れた設定は使わない */
@@ -1285,10 +1395,12 @@ function parseBulk(text) {
   const items = [];
   let skipped = 0;
   let clipped = 0;
+  const prefixes = namePrefixes();
+  const pattern = new RegExp("^(" + prefixes.map((item) => escapeRegExp(item.name)).join("|") + ")\\s*[:：]\\s*(.*)$");
   rows.forEach((raw) => {
     const line = raw.trim();
     if (!line) return;
-    const matched = line.match(/^(わたし|メェ助)\s*[:：]\s*(.*)$/);
+    const matched = line.match(pattern);
     if (!matched) {
       skipped += 1;
       return;
@@ -1303,8 +1415,9 @@ function parseBulk(text) {
       skipped += 1;
       return;
     }
+    const found = prefixes.find((item) => item.name === matched[1]);
     items.push({
-      speaker: matched[1] === "わたし" ? "watashi" : "meesuke",
+      speaker: found.key,
       text: body,
     });
   });
@@ -1321,7 +1434,7 @@ function describeImport(count, skipped, clipped) {
 function applyImport(mode) {
   const parsed = parseBulk(document.getElementById("bulk").value);
   if (!parsed.items.length) {
-    setNote("bulk-note", "取り込める行がありません。行頭を「わたし：」または「メェ助：」にしてください。");
+    setNote("bulk-note", "取り込める行がありません。行頭を「" + SPEAKERS.watashi.name + "：」または「" + SPEAKERS.meesuke.name + "：」にしてください。");
     return;
   }
   const mapped = parsed.items.map((item) => ({ id: uid(), speaker: item.speaker, text: item.text }));
@@ -1359,7 +1472,8 @@ function bindLines() {
   list.addEventListener("paste", (event) => {
     if (event.target.tagName !== "TEXTAREA") return;
     const text = event.clipboardData ? event.clipboardData.getData("text") : "";
-    if (/\n/.test(text) && /(わたし|メェ助)\s*[:：]/.test(text)) {
+    const prefix = namePrefixes().map((item) => escapeRegExp(item.name)).join("|");
+    if (/\n/.test(text) && prefix && new RegExp("(?:" + prefix + ")\\s*[:：]").test(text)) {
       event.preventDefault();
       document.getElementById("bulk").value = text;
       setNote("bulk-note", "複数行は「まとめて貼る」に入れました。取り込みボタンを押してください。");
@@ -1427,6 +1541,94 @@ function bindLines() {
     }
     scheduleSaveLines();
     queuePreview();
+  });
+}
+
+function nameTaken(key, candidate) {
+  const other = SPEAKERS[otherSpeaker(key)];
+  return candidate === other.committed || candidate === other.name;
+}
+
+function unfinishedDuplicate(key, candidate) {
+  const otherName = SPEAKERS[otherSpeaker(key)].committed;
+  return otherName.indexOf(candidate) === 0 && candidate !== otherName;
+}
+
+function showCommittedName(key) {
+  const spec = SPEAKERS[key];
+  spec.name = spec.committed;
+  refreshSpeakerGlyph(key);
+  const input = document.querySelector('[data-name="' + key + '"]');
+  if (input) input.value = spec.committed;
+}
+
+function bindNames() {
+  document.querySelectorAll("[data-name]").forEach((input) => {
+    input.addEventListener("input", () => {
+      const key = input.dataset.name;
+      const next = clampName(input.value);
+      if (input.value !== next) {
+        const pos = input.selectionStart || next.length;
+        input.value = next;
+        const caret = Math.min(pos, next.length);
+        input.selectionStart = caret;
+        input.selectionEnd = caret;
+      }
+      const trimmed = next.trim();
+      if (!trimmed || nameTaken(key, trimmed) || unfinishedDuplicate(key, trimmed)) {
+        SPEAKERS[key].name = SPEAKERS[key].committed;
+        refreshSpeakerGlyph(key);
+        setNote("icon-note", trimmed && nameTaken(key, trimmed) ? "二人の名前は別にしてください。" : "");
+        syncNameSurfaces();
+        queuePreview();
+        return;
+      }
+      setNote("icon-note", "");
+      SPEAKERS[key].name = trimmed;
+      SPEAKERS[key].committed = trimmed;
+      refreshSpeakerGlyph(key);
+      syncNameSurfaces();
+      persistPrefs();
+      queuePreview();
+    });
+    input.addEventListener("blur", () => {
+      const key = input.dataset.name;
+      const spec = SPEAKERS[key];
+      const trimmed = clampName(input.value).trim();
+      const fallback = spec.defaultName;
+      if (!trimmed && !nameTaken(key, fallback)) {
+        spec.name = fallback;
+        spec.committed = fallback;
+        refreshSpeakerGlyph(key);
+        input.value = fallback;
+        setNote("icon-note", "");
+        syncNameSurfaces();
+        persistPrefs();
+        queuePreview();
+        return;
+      }
+      if (!trimmed || nameTaken(key, trimmed)) {
+        showCommittedName(key);
+        setNote("icon-note", "二人の名前は別にしてください。元の名前に戻しました。");
+        syncNameSurfaces();
+        queuePreview();
+        return;
+      }
+      spec.name = trimmed;
+      spec.committed = trimmed;
+      refreshSpeakerGlyph(key);
+      input.value = trimmed;
+      setNote("icon-note", "");
+      syncNameSurfaces();
+      persistPrefs();
+      queuePreview();
+    });
+    input.addEventListener("keydown", (event) => {
+      if (event.key === "Enter" && !event.isComposing) {
+        event.preventDefault();
+        input.blur();
+      }
+    });
   });
 }
 
@@ -1524,9 +1726,11 @@ function bindEditor() {
 
 function boot() {
   loadStored();
+  syncNameSurfaces();
   syncPrefsUi();
   renderLines();
   bindLines();
+  bindNames();
   bindIcons();
   bindOutput();
   bindEditor();
