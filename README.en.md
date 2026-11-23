@@ -13,7 +13,7 @@ People who write on note and want the two voices as images in the article.
 ## What you can do
 
 - Add one line at a time, reorder lines, and delete lines
-- Paste lines that start with 「わたし：」 or 「メェ助：」 and import them together. After a rename, the new names are the line prefixes
+- Paste lines that start with the current names and a colon. The defaults are 「わたし：」 and 「メェ助：」, and a rename changes those prefixes
 - Check the bubbles on screen before saving
 - Save one PNG per line, or one PNG of the whole conversation
 - Choose a transparent background or a pale green one
