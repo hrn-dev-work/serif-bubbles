@@ -25,7 +25,7 @@ Start each line with the speaker. A full-width or half-width colon both work.
 メェ助：どの道を歩いたの？
 ```
 
-After a rename, start the line with that name. The original 「わたし」 and 「メェ助」 still work when they do not match the other speaker's current name.
+After a rename, start the line with that name. 「わたし：」 and 「メェ助：」 are recognized only while those strings are still in the name fields.
 
 "末尾に追加" appends the lines. "この内容に置き換える" asks first, then keeps only the pasted lines.
 

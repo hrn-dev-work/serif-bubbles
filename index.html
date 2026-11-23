@@ -431,7 +431,7 @@ footer {
     <h1>吹き出し画像メーカー</h1>
     <div class="howto">
       <p>右側の名前は「わたし」、左側は「メェ助」が初期値です。どちらも別の名前に変えられます。</p>
-      <p>セリフを1行ずつ追加するか、「名前：」で始まる行をまとめて貼ります。</p>
+      <p id="howto-prefix">セリフを1行ずつ追加するか、「わたし：」「メェ助：」で始まる行をまとめて貼ります。</p>
       <p>プレビューを確認し、セリフごと、または会話全体を、横幅800pxのPNGで保存します。</p>
     </div>
   </header>
@@ -733,13 +733,7 @@ function escapeRegExp(value) {
 }
 
 function namePrefixes() {
-  const pairs = [];
-  ["watashi", "meesuke"].forEach((key) => {
-    pairs.push({ key, name: SPEAKERS[key].name });
-    if (SPEAKERS[key].defaultName !== SPEAKERS[key].name) {
-      pairs.push({ key, name: SPEAKERS[key].defaultName });
-    }
-  });
+  const pairs = ["watashi", "meesuke"].map((key) => ({ key, name: SPEAKERS[key].name }));
   const seen = new Set();
   return pairs.filter((item) => {
     if (!item.name || seen.has(item.name)) return false;
@@ -770,6 +764,10 @@ function syncNameSurfaces() {
   const hint = document.getElementById("bulk-hint");
   if (hint) {
     hint.textContent = "行頭が「" + SPEAKERS.watashi.name + "：」または「" + SPEAKERS.meesuke.name + "：」の行だけ取り込みます。80文字を超える分は切り詰めます。";
+  }
+  const prefix = document.getElementById("howto-prefix");
+  if (prefix) {
+    prefix.textContent = "セリフを1行ずつ追加するか、「" + SPEAKERS.watashi.name + "：」「" + SPEAKERS.meesuke.name + "：」で始まる行をまとめて貼ります。";
   }
 }
 

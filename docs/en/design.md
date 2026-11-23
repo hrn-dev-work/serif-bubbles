@@ -21,7 +21,7 @@ The app is the single file `index.html`. It runs when a browser opens that file.
 | わたし (default, right) | Right, icon on the right | White `#FFFFFF` | Green `#4E7A3F`, 3px | `#3e6432` | First character of the name. Default わ |
 | メェ助 (default, left) | Left, icon on the left | Cream `#FFFBF0` | Gold `#C99A3E`, 3px | `#6e4f1c` | First character of the name. Default メ |
 
-The names can be edited on the page. The defaults are わたし on the right and メェ助 on the left. A new name is used under the icon and as the bulk-paste prefix. An empty field returns to the default. The two names must differ. Extra characters past 12 are cut off. Colors and sides stay put. File names still use `watashi` and `meesuke` for those sides. A default name still works as a prefix only when it is not the other speaker's current name.
+The names can be edited on the page. The defaults are わたし on the right and メェ助 on the left. A new name is used under the icon and as the bulk-paste prefix. An empty field returns to the default. The two names must differ. Extra characters past 12 are cut off. Colors and sides stay put. File names still use `watashi` and `meesuke` for those sides. Bulk paste reads only the names currently in the fields. After a rename, 「わたし：」 and 「メェ助：」 are no longer prefixes.
 
 Each icon is cropped to a circle with a gold `#C99A3E` ring (2.5px). The name is 16px under the icon, shrinking to 11px if it does not fit the column. A small triangle points toward that speaker. Bubble corners are rounded.
 
