@@ -4,9 +4,11 @@ Open `index.html` in a browser. No server is required.
 
 ## 1. Set the icons
 
-Press "画像を選ぶ" for わたし and for メェ助. The picture is cropped to a circle with a thin gold edge. The name sits under the icon.
+The right name starts as わたし and the left name starts as メェ助. Editing a name changes the label under the bubble and the prefix used when pasting lines. An empty field returns to the default. The two names must differ. Characters past 12 are cut off.
 
-The picture stays in this browser. If the browser cannot store it, it still works until you close the page. With no picture, the circle shows わ or メ.
+Press "画像を選ぶ" for each speaker. The picture is cropped to a circle with a thin gold edge. The name sits under the icon.
+
+The picture and the names stay in this browser. If the browser cannot store them, they still work until you close the page. With no picture, the circle shows the first character of the name. The defaults are わ and メ.
 
 ## 2. Enter one line at a time
 
@@ -19,13 +21,15 @@ The picture stays in this browser. If the browser cannot store it, it still work
 Start each line with the speaker. A full-width or half-width colon both work.
 
 ```text
-わたし：本命は内枠。直線の切れ味で差し切れるはず。
-メェ助：今日の馬場は稍重。先行勢が残りやすい。
+わたし：今日は、朝の散歩で気づいたことを書きます。
+メェ助：どの道を歩いたの？
 ```
+
+After a rename, start the line with that name. The original 「わたし」 and 「メェ助」 still work when they do not match the other speaker's current name.
 
 "末尾に追加" appends the lines. "この内容に置き換える" asks first, then keeps only the pasted lines.
 
-A line that starts with neither 「わたし：」 nor 「メェ助：」 is skipped. Characters past 80 are cut off.
+A line that starts with neither name is skipped. Characters past 80 are cut off.
 
 If you paste several lines into one dialogue box, they move to the bulk box.
 

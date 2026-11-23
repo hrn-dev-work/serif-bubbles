@@ -4,7 +4,7 @@ Status: **Accepted**
 
 ## Purpose
 
-note articles have no speech bubbles. This tool makes images of a conversation between the writer and a partner, so those images can be pasted into a horse-racing article.
+note articles have no speech bubbles. This tool makes images of a conversation between two speakers, so those images can be pasted into an article.
 
 ## Who uses it
 
@@ -18,10 +18,12 @@ The app is the single file `index.html`. It runs when a browser opens that file.
 
 | Speaker | Place | Bubble | Border | Name color | No icon |
 | --- | --- | --- | --- | --- | --- |
-| わたし | Right, icon on the right | White `#FFFFFF` | Green `#4E7A3F`, 3px | `#3e6432` | わ |
-| メェ助 | Left, icon on the left | Cream `#FFFBF0` | Gold `#C99A3E`, 3px | `#6e4f1c` | メ |
+| わたし (default, right) | Right, icon on the right | White `#FFFFFF` | Green `#4E7A3F`, 3px | `#3e6432` | First character of the name. Default わ |
+| メェ助 (default, left) | Left, icon on the left | Cream `#FFFBF0` | Gold `#C99A3E`, 3px | `#6e4f1c` | First character of the name. Default メ |
 
-Each icon is cropped to a circle with a gold `#C99A3E` ring (2.5px). The name is 16px under the icon. A small triangle points toward that speaker. Bubble corners are rounded.
+The names can be edited on the page. The defaults are わたし on the right and メェ助 on the left. A new name is used under the icon and as the bulk-paste prefix. An empty field returns to the default. The two names must differ. Extra characters past 12 are cut off. Colors and sides stay put. File names still use `watashi` and `meesuke` for those sides. A default name still works as a prefix only when it is not the other speaker's current name.
+
+Each icon is cropped to a circle with a gold `#C99A3E` ring (2.5px). The name is 16px under the icon, shrinking to 11px if it does not fit the column. A small triangle points toward that speaker. Bubble corners are rounded.
 
 ## Screen
 
@@ -43,7 +45,7 @@ flowchart TD
 ## Input
 
 - One line holds 80 characters. A line break is not part of the sentence. The bubble wraps by width.
-- The bulk box assigns the speaker from a line that starts with わたし or メェ助 and a full-width or half-width colon.
+- The bulk box assigns the speaker from a line that starts with a display name and a full-width or half-width colon. The defaults are わたし and メェ助.
 - The first visit shows sample lines. After an edit, the browser keeps that text.
 
 ## Output
@@ -59,7 +61,7 @@ flowchart TD
 | --- | --- |
 | `serif-bubble-icons-v1` | Icon images |
 | `serif-bubble-lines-v1` | Lines |
-| `serif-bubble-prefs-v1` | Split mode and background |
+| `serif-bubble-prefs-v1` | Split mode, background, and the two display names |
 
 If saving fails, the page still shows the current work until it is closed.
 
